@@ -201,7 +201,7 @@ Badge (add after CI is set up):
 Save under `docs/images/` and embed in `docs/architecture.md`.
 
 ---
----
+
 
 ## 🔎 Project Status (Roadmap)
 
