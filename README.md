@@ -16,20 +16,23 @@ README - Retail Analytics Lakehouse (Azure)
 
 ```mermaid
 flowchart LR
-A[Landing: ADLS Gen2] --> B[Bronze: Delta (external)]
-B --> C[Silver: Delta (external)]
-C --> D[(Gold Star: UC managed tables)]
-C --> E[(Gold OBT: UC managed table)]
+  A["Landing: ADLS Gen2"] --> B["Bronze: Delta (external)"]
+  B --> C["Silver: Delta (external)"]
+  C --> D["Gold Star: UC managed tables"]
+  C --> E["Gold OBT: UC managed table"]
 
-subgraph Orchestration
-ADF[Azure Data Factory]
-DBX[Azure Databricks Jobs + SQL Warehouse]
-end
+  %% Orchestration (context only)
+  subgraph Orchestration
+    ADF["Azure Data Factory"]
+    DBX["Azure Databricks Jobs + SQL Warehouse"]
+  end
 
-A -->|ADF copy| B
-B -->|Databricks Auto Loader (availableNow)| C
-C -->|Databricks SQL (MERGE)| D
-C -->|Databricks SQL (CTAS)| E
+  %% Dataflow edges
+  A -->|ADF copy| B
+  B -->|Auto Loader (availableNow)| C
+  C -->|Databricks SQL (MERGE)| D
+  C -->|Databricks SQL (CTAS)| E
+
 
 
 ---
