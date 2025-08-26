@@ -19,7 +19,7 @@ flowchart LR
   A["Landing: ADLS Gen2"] --> B["Bronze: Delta (external)"]
   B --> C["Silver: Delta (external)"]
   C --> D["Gold Star: UC managed tables"]
-  C --> E["Gold OBT: UC managed table"]
+  D --> E["Gold OBT: UC managed table"]
 
   subgraph Orchestration
     ADF["Azure Data Factory"]
@@ -29,7 +29,7 @@ flowchart LR
   A -- "ADF copy" --> B
   B -- "Auto Loader availableNow" --> C
   C -- "SQL MERGE" --> D
-  C -- "SQL CTAS" --> E
+  D -- "SQL CTAS" --> E
 
 ```
 
