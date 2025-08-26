@@ -16,53 +16,52 @@ README - Retail Analytics Lakehouse (Azure)
 
 ```mermaid
 flowchart LR
-A[Blob Landing] --> B[Bronze (Delta)]
-B --> C[Silver (Delta, conformed)]
-C --> D[(Gold Star)]
-C --> E[(Gold OBT)]
+A[Landing: ADLS Gen2] --> B[Bronze: Delta (external)]
+B --> C[Silver: Delta (external)]
+C --> D[(Gold Star: UC managed tables)]
+C --> E[(Gold OBT: UC managed table)]
 
 subgraph Orchestration
 ADF[Azure Data Factory]
-DBX[Databricks Jobs & SQL]
+DBX[Azure Databricks Jobs + SQL Warehouse]
 end
 
 A -->|ADF copy| B
-B -->|PySpark (Auto Loader availableNow)| C
+B -->|Databricks Auto Loader (availableNow)| C
 C -->|Databricks SQL (MERGE)| D
 C -->|Databricks SQL (CTAS)| E
-```
+
 
 ---
 
 ## 📂 Repository Map
 
-```
-adf/ # ADF ARM export + import notes
-factory/
-arm_template.json
-arm_template_parameters.json
+adf/                     # ADF ARM export + import notes
+  factory/
+    arm_template.json
+    arm_template_parameters.json
 
 databricks/
-notebooks/ # PySpark notebooks (bronze→silver)
-sql/ # SQL scripts (silver→gold: dims, fact, OBT)
+  notebooks/             # PySpark notebooks (bronze→silver)
+  sql/                   # SQL scripts (silver→gold: dims, fact, OBT)
 
 docs/
-architecture.md # detailed diagrams + explanation
-data_model.md # star schema + OBT columns
-security_rbac_acl.md # RBAC/ACL setup + masking views
+  architecture.md        # detailed diagrams + explanation
+  data_model.md          # star schema + OBT columns
+  security_rbac_acl.md   # RBAC/ACL setup + masking views
 
 infra/
-storage_layout.md # ADLS containers (Landing/Bronze/Silver only)
-az_cli_bootstrap.md # optional: create resources via CLI
+  storage_layout.md      # ADLS containers (Landing/Bronze/Silver only)
+  az_cli_bootstrap.md    # optional: create resources via CLI
 
 data/
-seed/
-generate_orders.py # synthetic dataset generator
+  seed/
+    generate_orders.py   # synthetic dataset generator
 
 .github/
-workflows/
-ci.yml # CI workflow (lint Python + SQL)
-```
+  workflows/
+    ci.yml               # CI workflow (lint Python + SQL)
+
 
 ---
 
@@ -84,11 +83,15 @@ ci.yml # CI workflow (lint Python + SQL)
 ## ⚙️ Quickstart
 
 ### Prereqs
-- Azure Subscription  
-- ADLS Gen2 (Hierarchical namespace ON)  
-- Azure Databricks workspace  
-- Azure Data Factory (linked to Storage + Databricks)  
-- (Optional) Key Vault for secrets  
+Azure Subscription
+
+ADLS Gen2 (Hierarchical namespace ON)
+
+Azure Databricks workspace (with SQL Warehouse)
+
+Azure Data Factory (linked to Storage + Databricks)
+
+(Optional) Key Vault for secrets 
 
 ### 1) Storage layout (ADLS)
 
@@ -112,7 +115,7 @@ This will generate small CSV/JSON test files into `landing/ecommerce/...`.
 
 ### 3) Bronze → Silver (PySpark, Databricks)
 - Notebook `bronze_ingest_availableNow`: uses Auto Loader to ingest landing → bronze  
-- Notebook `silver_transform`: cleans, deduplicates, hashes PII, writes conformed Delta tables  
+- Notebook `silver_transform`: cleans, deduplicates, hashes PII, writes to silver  
 
 ### 4) Silver → Gold (Databricks SQL)
 Run `databricks/sql/ecom_gold_build.sql` to build:
@@ -135,12 +138,14 @@ Add success/failure notifications for production-like monitoring.
 ## 🔐 Security (RBAC & ACL)
 
 - **ADLS ACLs**
-  - Engineers (`dg-ecom-de`): **rwx** on `/bronze`, `/silver`, `/gold`
-  - Analysts (`dg-ecom-analyst`): **rx** on `/gold/star` and `/gold/obt`
+  - Engineers (`dg-ecom-de`): **rwx** on `/bronze`, `/silver`
+  - Analysts (`dg-ecom-analyst`): **rx** on `/gold`
 
 - **Databricks GRANTs**
   ```sql
-  GRANT SELECT ON DATABASE ecom_gold TO `dg-ecom-analyst`;
+    GRANT SELECT ON SCHEMA retail.ecom_gold_obt TO `dg-ecom-analyst`;
+    GRANT SELECT ON SCHEMA retail.ecom_gold_star TO `dg-finance`;
+
   ```
   Create **secure views** to expose `email_hash` instead of raw PII.
 
@@ -169,11 +174,13 @@ See [`docs/data_model.md`](docs/data_model.md) for details.
 
 GitHub Actions workflow at `.github/workflows/ci.yml`:  
 
-- Lints Python notebooks/utilities (`flake8`)  
+- Formats Python code with **Black** (PEP8 auto-formatter)  
 - Runs optional unit tests (`pytest`)  
-- Lints SQL scripts (`sqlfluff`)  
+- Lints SQL scripts with **sqlfluff**  
 
 Badge (add after CI is set up):
+
+
 
 ```
 ![CI](https://github.com/grv-keshri/retail-analytics-lakehouse/actions/workflows/ci.yml/badge.svg)
@@ -197,7 +204,7 @@ Save under `docs/images/` and embed in `docs/architecture.md`.
 ## 🔎 Project Status (Roadmap)
 
 - [x] Stage 1: Repo scaffolding  
-- [ ] Stage 2: Azure foundation (ADLS, ADF, Databricks)  
+- [x] Stage 2: Azure foundation (ADLS, ADF, Databricks)  
 - [ ] Stage 3: RBAC/ACL  
 - [ ] Stage 4: Bronze→Silver (PySpark)  
 - [ ] Stage 5: Silver→Gold (SQL)  
