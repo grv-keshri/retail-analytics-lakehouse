@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+
+# Databricks checkpoints, schemas, local env
+chk/
+schemas/
+.env
+
+# OS / editor junk
+.DS_Store
+.vscode/
+.idea/
+
+# ADF publish cache
+adf/publish/
+
+# Data samples (keep small!)
+data/seed/sample/*.parquet
