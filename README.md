@@ -21,17 +21,16 @@ flowchart LR
   C --> D["Gold Star: UC managed tables"]
   C --> E["Gold OBT: UC managed table"]
 
-  %% Orchestration (context only)
   subgraph Orchestration
     ADF["Azure Data Factory"]
     DBX["Azure Databricks Jobs + SQL Warehouse"]
   end
 
-  %% Dataflow edges
-  A -->|ADF copy| B
-  B -->|Auto Loader (availableNow)| C
-  C -->|Databricks SQL (MERGE)| D
-  C -->|Databricks SQL (CTAS)| E
+  A -- "ADF copy" --> B
+  B -- "Auto Loader availableNow" --> C
+  C -- "SQL MERGE" --> D
+  C -- "SQL CTAS" --> E
+
 
 
 
