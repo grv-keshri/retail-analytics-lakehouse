@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install tooling
+        run: |
+          pip install --upgrade pip
+          pip install black==24.8.0 sqlfluff==3.0.5 pytest
+
+      # Format check (kept strict; your repo should pass)
+      - name: Black (check)
+        run: black --check databricks/notebooks data/seed
+
+      # SQL lint (temporarily non-blocking)
+      - name: SQLFluff (sparksql dialect)
+        run: |
+          echo "[sqlfluff]" > .sqlfluff
+          echo "dialect = sparksql" >> .sqlfluff
+          sqlfluff lint databricks/sql || true
+
+      # Tests (optional, non-blocking until you add tests)
+      - name: Pytest (optional)
+        run: pytest || true
