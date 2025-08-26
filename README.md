@@ -31,7 +31,7 @@ flowchart LR
   C -- "SQL MERGE" --> D
   C -- "SQL CTAS" --> E
 
-
+```
 
 
 ---
