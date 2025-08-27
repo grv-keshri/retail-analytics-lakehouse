@@ -150,8 +150,8 @@ Add success/failure notifications for production-like monitoring.
 
 - **Databricks GRANTs**
   ```sql
-    GRANT SELECT ON SCHEMA retail.ecom_gold_obt TO `dg-ecom-analyst`;
-    GRANT SELECT ON SCHEMA retail.ecom_gold_star TO `dg-finance`;
+    GRANT SELECT ON SCHEMA retail_analytics.sales_obt_daily TO `dg-ecom-analyst`;
+  
 
   ```
   Create **secure views** to expose `email_hash` instead of raw PII.
