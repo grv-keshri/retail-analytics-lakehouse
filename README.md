@@ -16,25 +16,19 @@ README - Retail Analytics Lakehouse (Azure)
 
 ```mermaid
   flowchart LR
-  %% ===== Styles =====
-  classDef hidden fill:#f5f5f5,stroke:#bbb,color:#333;         %% Volumes / not exposed
-  classDef internal fill:#e8f0fe,stroke:#6b8afd,color:#0b3;    %% Exposed as tables (engineering/internal)
-  classDef business fill:#e6ffed,stroke:#2ea043,color:#033;    %% Exposed as tables (business/BI)
+  classDef hidden fill:#f5f5f5,stroke:#bbb,color:#333
+  classDef internal fill:#e8f0fe,stroke:#6b8afd,color:#0b3
+  classDef business fill:#e6ffed,stroke:#2ea043,color:#033
 
-  %% RAW
   RAW["Raw Volumes<br/>landing_ecommerce, schemas_ecommerce, chk_ecommerce"]:::hidden
   BRZ["Bronze Volume<br/>bronze_ecommerce (Delta files only)"]:::hidden
 
-  %% SILVER
   SILVER["Silver Tables<br/>ecommerce_orders, orderlines, customers, products, returns"]:::internal
 
-  %% GOLD
   GOLD["Gold Tables<br/>dim_date, dim_product, dim_channel, dim_customer, fact_sales, sales_obt_daily"]:::business
 
-  %% Flows
   RAW --> BRZ --> SILVER --> GOLD
 
-  %% Audience Notes
   note right of SILVER
     Silver = Curated foundation tables
     Audience: Data Eng / Data Science
@@ -44,6 +38,7 @@ README - Retail Analytics Lakehouse (Azure)
     Gold = Business-facing semantic layer
     Audience: BI / Finance / Analysts
   end
+
 ```
 
 
