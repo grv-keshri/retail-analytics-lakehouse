@@ -41,7 +41,7 @@ flowchart LR
 ---
 
 ## 📂 Repository Map
-
+```graphql
 adf/                     # ADF ARM export + import notes
   factory/
     arm_template.json
@@ -68,7 +68,7 @@ data/
   workflows/
     ci.yml               # CI workflow (lint Python + SQL)
 
-
+```
 ---
 
 ## 🧭 What this project demonstrates
