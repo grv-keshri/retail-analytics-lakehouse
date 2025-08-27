@@ -42,32 +42,46 @@ flowchart LR
 
 ## 📂 Repository Map
 ```graphql
-adf/                     # ADF ARM export + import notes
+# main / develop branches
+adf/
   factory/
-    arm_template.json
-    arm_template_parameters.json
+    pipeline/
+    dataset/
+    linkedService/
+    dataflow/
+    trigger/
+    factory/
 
 databricks/
-  notebooks/             # PySpark notebooks (bronze→silver)
-  sql/                   # SQL scripts (silver→gold: dims, fact, OBT)
+  notebooks/              # notebooks that your jobs run
+    raw/
+    bronze/
+    silver/
+    gold/
+  sql/                    # UC DDL & table constraints, grants, etc. (migration scripts)
+  jobs/                   # optional: job specs (JSON/YAML) or DAB bundles
 
 docs/
-  architecture.md        # detailed diagrams + explanation
-  data_model.md          # star schema + OBT columns
-  security_rbac_acl.md   # RBAC/ACL setup + masking views
+  architecture.md
+  data_model.md
+  security_rbac_acl.md
 
 infra/
-  storage_layout.md      # ADLS containers (Landing/Bronze/Silver only)
-  az_cli_bootstrap.md    # optional: create resources via CLI
+  storage_layout.md
+  az_cli_bootstrap.md
 
 data/
   seed/
-    generate_orders.py   # synthetic dataset generator
+    generate_orders.py
 
 .github/
   workflows/
-    ci.yml               # CI workflow (lint Python + SQL)
+    ci.yml                # lint, basic checks, maybe dry-run SQL
 
+# separate branch (not a folder in main)
+(branch: adf_publish)
+ARMTemplateForFactory.json
+ARMTemplateParametersForFactory.json
 ```
 ---
 
