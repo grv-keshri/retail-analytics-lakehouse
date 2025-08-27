@@ -15,7 +15,7 @@ README - Retail Analytics Lakehouse (Azure)
 ## 🚀 Architecture
 
 ```mermaid
-flowchart LR
+  flowchart LR
   %% ===== Styles =====
   classDef hidden fill:#f5f5f5,stroke:#bbb,color:#333;         %% Volumes / not exposed
   classDef internal fill:#e8f0fe,stroke:#6b8afd,color:#0b3;    %% Exposed as tables (engineering/internal)
@@ -44,8 +44,6 @@ flowchart LR
     Gold = Business-facing semantic layer
     Audience: BI / Finance / Analysts
   end
-
-
 ```
 
 
