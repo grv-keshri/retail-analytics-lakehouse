@@ -150,7 +150,7 @@ Add success/failure notifications for production-like monitoring.
 
 - **Databricks GRANTs**
   ```sql
-    GRANT SELECT ON SCHEMA •	retail_analytics.gold.ecommerce.sales_obt_daily TO `dg-ecom-analyst`;
+    GRANT SELECT ON SCHEMA retail_analytics.gold.ecommerce.sales_obt_daily TO `dg-ecom-analyst`;
   
 
   ```
