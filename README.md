@@ -16,20 +16,35 @@ README - Retail Analytics Lakehouse (Azure)
 
 ```mermaid
 flowchart LR
-  A["Landing: ADLS Gen2"] --> B["Bronze: Delta (external)"]
-  B --> C["Silver: Delta (external)"]
-  C --> D["Gold Star: UC managed tables"]
-  D --> E["Gold OBT: UC managed table"]
+  %% ===== Styles =====
+  classDef hidden fill:#f5f5f5,stroke:#bbb,color:#333;         %% Volumes / not exposed
+  classDef internal fill:#e8f0fe,stroke:#6b8afd,color:#0b3;    %% Exposed as tables (engineering/internal)
+  classDef business fill:#e6ffed,stroke:#2ea043,color:#033;    %% Exposed as tables (business/BI)
 
-  subgraph Orchestration
-    ADF["Azure Data Factory"]
-    DBX["Azure Databricks Jobs + SQL Warehouse"]
+  %% RAW
+  RAW["Raw Volumes<br/>landing_ecommerce, schemas_ecommerce, chk_ecommerce"]:::hidden
+  BRZ["Bronze Volume<br/>bronze_ecommerce (Delta files only)"]:::hidden
+
+  %% SILVER
+  SILVER["Silver Tables<br/>ecommerce_orders, orderlines, customers, products, returns"]:::internal
+
+  %% GOLD
+  GOLD["Gold Tables<br/>dim_date, dim_product, dim_channel, dim_customer, fact_sales, sales_obt_daily"]:::business
+
+  %% Flows
+  RAW --> BRZ --> SILVER --> GOLD
+
+  %% Audience Notes
+  note right of SILVER
+    Silver = Curated foundation tables
+    Audience: Data Eng / Data Science
   end
 
-  A -- "ADF copy" --> B
-  B -- "Auto Loader availableNow" --> C
-  C -- "SQL MERGE" --> D
-  D -- "SQL CTAS" --> E
+  note right of GOLD
+    Gold = Business-facing semantic layer
+    Audience: BI / Finance / Analysts
+  end
+
 
 ```
 
@@ -100,10 +115,11 @@ Azure Data Factory (linked to Storage + Databricks)
 ```
 abfss://de-portfolio@newstoragegaurav.dfs.core.windows.net/
   landing/ecommerce/{orders,orderlines,customers,products,returns}/
-  bronze/ecommerce/...
-  silver/ecommerce/...
-  chk/ecommerce/...
-  schemas/ecommerce/...
+  bronze/ecommerce/...        # raw Delta files (volume, not tables)
+  silver/ecommerce/...        # curated external Delta tables
+  chk/ecommerce/...           # checkpoints
+  schemas/ecommerce/...       # schema inference
+
 ```
 
 ### 2) Seed data (optional)
@@ -207,7 +223,7 @@ Save under `docs/images/` and embed in `docs/architecture.md`.
 
 - [x] Stage 1: Repo scaffolding  
 - [x] Stage 2: Azure foundation (ADLS, ADF, Databricks)  
-- [ ] Stage 3: RBAC/ACL  
+- [x] Stage 3: RBAC/ACL  (ADLS only)
 - [ ] Stage 4: Bronze→Silver (PySpark)  
 - [ ] Stage 5: Silver→Gold (SQL)  
 - [ ] Stage 6: CI (GitHub Actions)  
