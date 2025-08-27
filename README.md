@@ -15,29 +15,25 @@ README - Retail Analytics Lakehouse (Azure)
 ## 🚀 Architecture
 
 ```mermaid
-  flowchart LR
+flowchart LR
   classDef hidden fill:#f5f5f5,stroke:#bbb,color:#333
   classDef internal fill:#e8f0fe,stroke:#6b8afd,color:#0b3
   classDef business fill:#e6ffed,stroke:#2ea043,color:#033
+  classDef note fill:#fff5b1,stroke:#e0c200,color:#333
 
   RAW["Raw Volumes<br/>landing_ecommerce, schemas_ecommerce, chk_ecommerce"]:::hidden
   BRZ["Bronze Volume<br/>bronze_ecommerce (Delta files only)"]:::hidden
-
   SILVER["Silver Tables<br/>ecommerce_orders, orderlines, customers, products, returns"]:::internal
-
   GOLD["Gold Tables<br/>dim_date, dim_product, dim_channel, dim_customer, fact_sales, sales_obt_daily"]:::business
 
   RAW --> BRZ --> SILVER --> GOLD
 
-  note right of SILVER
-    Silver = Curated foundation tables
-    Audience: Data Eng / Data Science
-  end
+  N1["Silver = Curated foundation<br/>Audience: Data Eng / Data Science"]:::note
+  N2["Gold = Business-facing semantic layer<br/>Audience: BI / Finance / Analysts"]:::note
 
-  note right of GOLD
-    Gold = Business-facing semantic layer
-    Audience: BI / Finance / Analysts
-  end
+  SILVER -.-> N1
+  GOLD -.-> N2
+
 
 ```
 
