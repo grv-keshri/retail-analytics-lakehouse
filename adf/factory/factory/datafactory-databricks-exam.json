@@ -1,0 +1,9 @@
+{
+	"name": "datafactory-databricks-exam",
+	"location": "australiaeast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "1b8505d8-0b84-403d-a1cb-497727a9be6c",
+		"tenantId": "cd4075cf-5a3c-4707-a0f4-b205054851e2"
+	}
+}
