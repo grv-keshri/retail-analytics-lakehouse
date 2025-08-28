@@ -54,10 +54,6 @@ adf/
 
 databricks/
   notebooks/              # notebooks that your jobs run
-    raw/
-    bronze/
-    silver/
-    gold/
   sql/                    # UC DDL & table constraints, grants, etc. (migration scripts)
   jobs/                   # optional: job specs (JSON/YAML) or DAB bundles
 
