@@ -51,7 +51,7 @@
 				]
 			},
 			{
-				"name": "Delete1",
+				"name": "Delete landing data",
 				"type": "Delete",
 				"dependsOn": [
 					{
