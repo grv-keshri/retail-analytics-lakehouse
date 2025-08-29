@@ -1,7 +1,7 @@
 -- These are external tables pointing at Silver.
 
 USE CATALOG retail_analytics;
-USE SCHEMA ecommerce;
+USE SCHEMA silver;
 
 
 -- External tables
